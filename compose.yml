@@ -1,0 +1,55 @@
+services:
+  sells-postgres:
+    container_name: sells-postgres
+    image: postgres:${DB_VERSION}-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD} 
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    ports:
+      - "${DB_FORWARD_PORT}:${DB_PORT}"
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    networks:
+      - sells-network
+      
+  pg-admin-sells:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    container_name: sells-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL} 
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "${PGADMIN_FORWARD_PORT}:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin      
+    depends_on:
+        sells-postgres:
+            condition: service_healthy
+    networks:
+      - sells-network
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks: 
+  sells-network:
+    driver: bridge
