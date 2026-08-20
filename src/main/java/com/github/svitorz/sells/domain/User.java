@@ -11,16 +11,15 @@ import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
-@Table(name = "user")
+@Table(name = "users")
 @SQLDelete(sql = "UPDATE user SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 public class User extends Auditable{
 
     @Id
-    @GeneratedValue
-    @UuidGenerator
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id" )
-    private UUID id;
+    private Long id;
 
     @NotBlank
     @Column(length = 100, nullable = false)
