@@ -1,0 +1,70 @@
+.registration-page {
+    -fx-background-color: #f4f7fb;
+    -fx-font-family: "System";
+}
+
+.registration-card {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-color: #e1e7f0;
+    -fx-border-radius: 14;
+    -fx-padding: 32;
+    -fx-effect: dropshadow(gaussian, rgba(25, 45, 80, 0.10), 22, 0.15, 0, 6);
+}
+
+.eyebrow {
+    -fx-text-fill: #5271b8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1.2px;
+}
+
+.page-title {
+    -fx-text-fill: #17243b;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.subtitle {
+    -fx-text-fill: #6d7890;
+    -fx-font-size: 13px;
+}
+
+.field-label {
+    -fx-text-fill: #33415c;
+    -fx-font-weight: bold;
+    -fx-padding: 9px 0 0 0;
+}
+
+.text-field, .password-field, .combo-box {
+    -fx-background-color: #fbfcfe;
+    -fx-border-color: #d7deea;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 10px;
+}
+
+.primary-button {
+    -fx-background-color: #5271b8;
+    -fx-background-radius: 6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 20px;
+}
+
+.primary-button:hover {
+    -fx-background-color: #405f9f;
+    -fx-cursor: hand;
+}
+
+.feedback {
+    -fx-font-size: 12px;
+}
+
+.feedback.success {
+    -fx-text-fill: #247a52;
+}
+
+.feedback.error {
+    -fx-text-fill: #bd3d4b;
+}
