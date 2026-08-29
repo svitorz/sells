@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
 @Table(name = "categorys")
 public class Category {
 
