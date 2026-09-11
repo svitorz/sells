@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @Table(name = "sales")
+//TODO: implementar o allArgs constructor
+//TODO: implementar Getters e Setters corretamente
 public class Sale {
 
     @Id
