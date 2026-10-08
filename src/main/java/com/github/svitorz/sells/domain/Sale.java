@@ -33,10 +33,10 @@ public class Sale {
     @Column(nullable = false)
     private SaleStatus status;
 
-    //TODO: migrar para @ManyToOne quando a entidade Customer for modelada
     @NotNull
-    @Column(name = "customer_id", nullable = false)
-    private Long customerId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @NotNull
     @ManyToOne
