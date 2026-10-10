@@ -5,12 +5,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,9 +21,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "users")
-@SQLDelete(sql = "UPDATE users SET deleted_at = NOW() WHERE id = ?")
-@SQLRestriction("deleted_at IS NULL")
-public class User extends Auditable{
+public class User {
 
     @Id
     @Setter(AccessLevel.NONE)
@@ -38,7 +35,7 @@ public class User extends Auditable{
 
     @NotBlank
     @Email
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
 
     @NotBlank
@@ -55,6 +52,10 @@ public class User extends Auditable{
     private String password;
 
     private LocalDate birthdayDate;
+
+    @Builder.Default
+    @Column(name = "active", nullable = false)
+    private boolean active = true;
 
     @OneToMany(mappedBy = "user")
     private List<Sale> sales = new ArrayList<>();
