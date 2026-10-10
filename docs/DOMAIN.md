@@ -25,6 +25,9 @@ núcleo de vendas esteja consolidado.
 - Category
 - Sale
 - SaleItem
+- StockMovement
+
+O modelo completo, com tipos e constraints, está em `database.md`. Os casos de uso estão em `use-cases.md`.
 
 ## MVP Inicial
 
@@ -106,3 +109,26 @@ O MVP deverá priorizar:
 O projeto não deverá incorporar funcionalidades ou regras que não sejam
 necessárias para o escopo atual sem que elas sejam previamente justificadas
 e documentadas.
+
+## Glossário
+
+| Termo em português | Termo no código | Descrição |
+|---|---|---|
+| Usuário | `User` | Pessoa que acessa o sistema, com role `ADMIN` ou `USER` |
+| Cliente | `Customer` | Pessoa ou empresa para quem a venda é feita. Opcional na venda |
+| Produto | `Product` | Item cadastrado para venda, com preço, unidade e estoque |
+| Categoria | `Category` | Agrupamento de produtos. Um produto pode ter várias categorias |
+| Código de barras | `Product.barcode` | Código EAN usado para localizar o produto no caixa |
+| Unidade de venda | `ProductUnit` (`UN`, `KG`) | Define se o produto é vendido por unidade ou por quilo |
+| Venda | `Sale` | Operação de venda com itens, cliente e responsável |
+| Rascunho | `Sale` com status `DRAFT` | Venda em construção, que ainda não alterou o estoque |
+| Venda concluída | `Sale` com status `COMPLETED` | Venda finalizada, cujos itens e preços não podem mais mudar |
+| Venda cancelada | `Sale` com status `CANCELLED` | Venda concluída que foi estornada por um administrador |
+| Item de venda | `SaleItem` | Linha da venda, com produto, quantidade e preço unitário |
+| Saldo de estoque | `Product.stock` | Quantidade atual do produto em estoque |
+| Movimentação de estoque | `StockMovement` | Registro imutável de uma alteração de estoque |
+| Baixa de estoque | Movimentação `SALE` | Saída do estoque ao finalizar uma venda |
+| Devolução | Movimentação `RETURN` | Entrada no estoque ao cancelar uma venda concluída |
+| Entrada | Movimentação `ENTRY` | Recebimento de produtos |
+| Ajuste | Movimentação `ADJUSTMENT` | Correção manual do estoque, com justificativa obrigatória |
+| Exclusão lógica | Coluna `deleted_at` | Registro marcado como excluído, mas mantido para histórico |
