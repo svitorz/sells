@@ -3,6 +3,7 @@ package com.github.svitorz.sells.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,14 +33,18 @@ public class Customer extends Auditable{
     @NotBlank
     private String name;
 
-    @NotBlank
     @Setter
     @Email
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
     @Setter
     private LocalDate birthdayDate;
+
+    @Setter
+    @Pattern(regexp = "^([0-9]{11}|[0-9]{14})$")
+    @Column(name = "cpf_cnpj", length = 14)
+    private String cpfCnpj;
 
     @NotBlank
     @Setter

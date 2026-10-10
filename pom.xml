@@ -29,8 +29,22 @@
 	<properties>
 		<java.version>21</java.version>
 		<javafx.version>21.0.6</javafx.version>
+		<embedded-postgres.version>2.2.2</embedded-postgres.version>
+		<embedded-postgres-binaries.version>16.15.0</embedded-postgres-binaries.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>io.zonky.test</groupId>
+			<artifactId>embedded-postgres</artifactId>
+			<version>${embedded-postgres.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>io.zonky.test.postgres</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -109,5 +123,41 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>embedded-postgres-linux</id>
+			<activation>
+				<os>
+					<family>unix</family>
+					<name>Linux</name>
+					<arch>amd64</arch>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>io.zonky.test.postgres</groupId>
+					<artifactId>embedded-postgres-binaries-linux-amd64</artifactId>
+					<version>${embedded-postgres-binaries.version}</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>embedded-postgres-windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+					<arch>amd64</arch>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>io.zonky.test.postgres</groupId>
+					<artifactId>embedded-postgres-binaries-windows-amd64</artifactId>
+					<version>${embedded-postgres-binaries.version}</version>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 </project>
