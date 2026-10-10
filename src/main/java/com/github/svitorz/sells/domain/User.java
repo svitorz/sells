@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,10 @@ public class User extends Auditable{
     @Column(length = 100, nullable = false)
     private String email;
 
+    @NotBlank
+    @Column(length = 100, nullable = false, unique = true)
+    private String username;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -48,6 +53,8 @@ public class User extends Auditable{
     @NotBlank
     @Column(length = 255, nullable = false)
     private String password;
+
+    private LocalDate birthdayDate;
 
     @OneToMany(mappedBy = "user")
     private List<Sale> sales = new ArrayList<>();
