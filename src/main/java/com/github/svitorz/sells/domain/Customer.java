@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "customer")
+@Table(name = "customers")
 @SuperBuilder
-@SQLDelete(sql = "UPDATE customer SET deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE customers SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 @NoArgsConstructor
 @Getter
@@ -46,7 +46,8 @@ public class Customer extends Auditable{
     private String phone;
 
     @Setter
-    private String address;
+    @Embedded
+    private Address address;
 
     @Builder.Default
     @OneToMany(mappedBy = "customer")
