@@ -48,6 +48,7 @@ Achados que afetam a implementação:
 
 - `close()` apaga o diretório de dados quando `cleanDataDirectory` é `true`. A mesma flag controla a limpeza no start. Por isso, a aplicação usa sempre `false` e faz a limpeza explicitamente, quando necessário.
 - O lock da biblioteca só protege dentro da mesma JVM (`OverlappingFileLockException`). A proteção entre processos precisa de verificação própria (ADR-0004).
+- A biblioteca inicia o PostgreSQL com `fsync` e `synchronous_commit` desligados. As medições acima foram feitas nessas condições. A aplicação religa os dois (ADR-0004, item 9), o que pode deixar as escritas um pouco mais lentas.
 
 ## Atribuição
 

@@ -13,3 +13,7 @@ Rodar os testes (o PostgreSQL de teste é embutido e iniciado automaticamente):
     ./mvnw -B verify
 
 A arquitetura está descrita em docs/adr/0013-arquitetura-hexagonal.md.
+
+Abrir a aplicação (o banco é criado em ~/.sells na primeira execução):
+
+    ./mvnw javafx:run
