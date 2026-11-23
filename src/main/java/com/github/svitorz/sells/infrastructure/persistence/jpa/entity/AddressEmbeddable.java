@@ -1,4 +1,4 @@
-package com.github.svitorz.sells.domain;
+package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Address {
+public class AddressEmbeddable {
 
     @Column(name = "street", length = 150)
     private String street;

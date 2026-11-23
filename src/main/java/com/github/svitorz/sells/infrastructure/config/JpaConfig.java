@@ -1,4 +1,4 @@
-package com.github.svitorz.sells.config;
+package com.github.svitorz.sells.infrastructure.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

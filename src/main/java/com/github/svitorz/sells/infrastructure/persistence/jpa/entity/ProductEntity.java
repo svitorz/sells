@@ -1,5 +1,6 @@
-package com.github.svitorz.sells.domain;
+package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
+import com.github.svitorz.sells.domain.product.ProductUnit;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -17,7 +18,7 @@ import java.util.Set;
 @Table(name = "products")
 @SQLDelete(sql = "UPDATE products SET deleted_at = NOW () WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
-public class Product extends Auditable {
+public class ProductEntity extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,6 +54,6 @@ public class Product extends Auditable {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Set<Category> categories = new HashSet<>();
+    private Set<CategoryEntity> categories = new HashSet<>();
 
 }

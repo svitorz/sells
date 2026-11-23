@@ -1,4 +1,4 @@
-package com.github.svitorz.sells.domain;
+package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
 
 import jakarta.persistence.*;
@@ -17,7 +17,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "categories")
-public class Category {
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +29,5 @@ public class Category {
     private String description;
 
     @ManyToMany(mappedBy = "categories")
-    private Set<Product> products = new HashSet<>();
+    private Set<ProductEntity> products = new HashSet<>();
 }

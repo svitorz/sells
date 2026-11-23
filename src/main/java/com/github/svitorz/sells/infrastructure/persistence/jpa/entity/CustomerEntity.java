@@ -1,4 +1,4 @@
-package com.github.svitorz.sells.domain;
+package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -20,7 +20,7 @@ import java.util.List;
 @SQLRestriction("deleted_at IS NULL")
 @NoArgsConstructor
 @Getter
-public class Customer extends Auditable{
+public class CustomerEntity extends AuditableEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,9 +45,9 @@ public class Customer extends Auditable{
 
     @Setter
     @Embedded
-    private Address address;
+    private AddressEmbeddable address;
 
     @Builder.Default
     @OneToMany(mappedBy = "customer")
-    private List<Sale> sales = new ArrayList<>();
+    private List<SaleEntity> sales = new ArrayList<>();
 }

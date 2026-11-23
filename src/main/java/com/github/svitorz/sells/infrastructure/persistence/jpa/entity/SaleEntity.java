@@ -1,5 +1,6 @@
-package com.github.svitorz.sells.domain;
+package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
+import com.github.svitorz.sells.domain.sale.SaleStatus;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 //TODO: implementar o allArgs constructor
 //TODO: implementar Getters e Setters corretamente
-public class Sale {
+public class SaleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +35,11 @@ public class Sale {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    private Customer customer;
+    private CustomerEntity customer;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -53,7 +54,7 @@ public class Sale {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cancelled_by_user_id")
-    private User cancelledBy;
+    private UserEntity cancelledBy;
 
     @Column(name = "cancel_reason", columnDefinition = "TEXT")
     private String cancelReason;

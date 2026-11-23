@@ -1,4 +1,4 @@
-package com.github.svitorz.sells.domain;
+package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
 
 import jakarta.persistence.*;
@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SaleItem {
+public class SaleItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class SaleItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     @Setter(AccessLevel.NONE)
-    private Product product;
+    private ProductEntity product;
 
     @Column(name = "quantity", nullable = false, precision = 10, scale = 3)
     private BigDecimal quantity;
@@ -36,5 +36,5 @@ public class SaleItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_id", nullable = false)
     @Setter(AccessLevel.NONE)
-    private Sale sale;
+    private SaleEntity sale;
 }

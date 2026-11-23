@@ -1,4 +1,4 @@
-package com.github.svitorz.sells.domain;
+package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public abstract class Auditable {
+public abstract class AuditableEntity {
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)

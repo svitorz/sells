@@ -1,5 +1,6 @@
-package com.github.svitorz.sells.domain;
+package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
+import com.github.svitorz.sells.domain.stock.StockMovementType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class StockMovement {
+public class StockMovementEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +30,7 @@ public class StockMovement {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false, updatable = false)
-    private Product product;
+    private ProductEntity product;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, length = 20, updatable = false)
@@ -40,11 +41,11 @@ public class StockMovement {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_id", updatable = false)
-    private Sale sale;
+    private SaleEntity sale;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    private User user;
+    private UserEntity user;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

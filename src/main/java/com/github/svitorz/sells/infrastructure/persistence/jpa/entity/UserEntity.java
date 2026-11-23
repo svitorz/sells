@@ -1,5 +1,6 @@
-package com.github.svitorz.sells.domain;
+package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
+import com.github.svitorz.sells.domain.user.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "users")
-public class User {
+public class UserEntity {
 
     @Id
     @Setter(AccessLevel.NONE)
@@ -49,5 +50,5 @@ public class User {
     private boolean active = true;
 
     @OneToMany(mappedBy = "user")
-    private List<Sale> sales = new ArrayList<>();
+    private List<SaleEntity> sales = new ArrayList<>();
 }

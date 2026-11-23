@@ -1,4 +1,4 @@
-package com.github.svitorz.sells.domain;
+package com.github.svitorz.sells.domain.sale;
 
 public enum SaleStatus {
     DRAFT,
