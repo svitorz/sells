@@ -1,8 +1,6 @@
 package com.github.svitorz.sells.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -24,15 +22,12 @@ public class Sale {
     @Column(name = "id")
     private Long id;
 
-    @NotNull
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @NotNull
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SaleStatus status;
@@ -41,7 +36,6 @@ public class Sale {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

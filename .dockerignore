@@ -1,9 +1,0 @@
-.git
-.gitignore
-.idea
-.vscode
-.env
-target
-Dockerfile*
-compose*.yml
-README.md

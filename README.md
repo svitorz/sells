@@ -1,28 +1,13 @@
-# Sistema de Vendas open source
+# Sells
 
-Para configurar o ambiente:
+Sistema de vendas desktop, livre e gratuito (GPLv3), para pequenos comércios.
 
-```bash
-cp .env.example .env 
+> Projeto em desenvolvimento. O plano até a primeira versão está em `docs/mvp/`.
 
-```
+## Desenvolvimento
 
-Após isso, basta configurar as variáveis de ambiente no seu .env, e subir a aplicação com:
+Requisitos: JDK 21 ou mais novo. Docker não é necessário.
 
-```bash
-docker compose up -d --build
-```
+Rodar os testes (o PostgreSQL de teste é embutido e iniciado automaticamente):
 
-## Executar a interface JavaFX
-
-Com o PostgreSQL disponível e as variáveis do `.env` configuradas, execute:
-
-```bash
-./mvnw javafx:run
-```
-
-O JavaFX inicia a janela e o Spring Boot inicializa o contexto dentro do ciclo de vida
-da aplicação. Para executar apenas os testes, use `./mvnw test`.
-
-> [!NOTE]
-> As recomendações de configuração (default) estão no .env.example, utilize se estiver em ambiente de testes apenas.
+    ./mvnw -B verify
