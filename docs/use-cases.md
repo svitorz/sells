@@ -119,19 +119,19 @@ O cliente não é ator, porque não usa o sistema.
   - Produtos `UN` aceitam apenas quantidades inteiras.
   - O preço é copiado do produto no momento da inclusão (`unit_price`).
   - Se o produto já estiver no rascunho, as quantidades são somadas em uma única linha, mantendo o preço unitário da primeira inclusão. Um produto aparece no máximo uma vez por venda (`UNIQUE` em `sale_items`).
-  - Se a quantidade exceder o estoque disponível, o sistema mostra um aviso, mas permite a inclusão. O bloqueio acontece na finalização (ADR-0005).
+  - Se a quantidade exceder o estoque disponível, o sistema mostra um aviso, mas permite a inclusão. O bloqueio acontece na finalização (ADR-0005). O aviso de estoque compara a quantidade total da linha com o saldo atual do produto.
 
 ## UC10 Alterar quantidade ou remover item do rascunho
 
 - **Ator:** Operador.
 - **Fluxo principal:** o operador altera a quantidade de um item ou remove o item do rascunho. O subtotal é recalculado.
-- **Regras:** o rascunho precisa estar em `DRAFT`. Uma venda concluída ou cancelada não pode ter itens alterados.
+- **Regras:** o rascunho precisa estar em `DRAFT`. Uma venda concluída ou cancelada não pode ter itens alterados. O operador só altera os próprios rascunhos. O administrador pode alterar qualquer rascunho.
 
 ## UC11 Vincular ou trocar o cliente do rascunho
 
 - **Ator:** Operador.
 - **Fluxo principal:** o operador seleciona um cliente cadastrado ou deixa a venda sem cliente.
-- **Regras:** a troca de cliente só é permitida em `DRAFT`.
+- **Regras:** a troca de cliente só é permitida em `DRAFT`. O operador só altera os próprios rascunhos. O administrador pode alterar qualquer rascunho.
 
 ## UC12 Excluir rascunho
 
@@ -140,6 +140,7 @@ O cliente não é ator, porque não usa o sistema.
 - **Regras:**
   - Só rascunhos podem ser excluídos. Vendas concluídas seguem o UC14.
   - Como o rascunho nunca alterou o estoque, nenhuma movimentação é criada.
+  - O operador só altera os próprios rascunhos. O administrador pode alterar qualquer rascunho.
 
 ## UC13 Finalizar venda
 
@@ -156,6 +157,7 @@ O cliente não é ator, porque não usa o sistema.
   - Se algum item exceder o estoque, a finalização é bloqueada e o sistema informa o produto e a quantidade disponível (ADR-0005).
   - Estoque negativo nunca é permitido (ADR-0005).
   - Todas as alterações acontecem em uma única transação.
+  - Se um produto do rascunho foi excluído, a finalização é bloqueada até que o item seja removido.
 
 ## UC14 Cancelar venda concluída
 
@@ -168,12 +170,13 @@ O cliente não é ator, porque não usa o sistema.
   - Somente administradores podem cancelar (ADR-0007).
   - O motivo é obrigatório (ADR-0007).
   - Vendas canceladas não podem ser editadas nem finalizadas novamente (DOMAIN).
+  - O estoque é devolvido mesmo que o produto tenha sido excluído depois da venda.
 
 ## UC15 Consultar histórico de vendas
 
 - **Atores:** Operador, Administrador.
 - **Fluxo principal:** listar vendas com filtros por período, status, cliente e usuário. Ao selecionar uma venda, o sistema mostra os itens, o subtotal, o cliente, o responsável e, se houver, os dados do cancelamento.
-- **Regras:** vendas canceladas mantêm o motivo e o responsável pelo cancelamento visíveis no histórico.
+- **Regras:** vendas canceladas mantêm o motivo e o responsável pelo cancelamento visíveis no histórico. Rascunhos não aparecem no histórico. Os filtros de período incluem as datas inicial e final. A consulta retorna no máximo 500 vendas, das mais recentes para as mais antigas.
 
 ## UC16 Consultar produtos com estoque baixo
 
@@ -191,6 +194,7 @@ O cliente não é ator, porque não usa o sistema.
   - Fornecedores não são registrados no MVP (ADR-0008). A origem da entrada pode ser descrita no campo de observações.
   - Ajustes exigem observações preenchidas (ADR-0005).
   - O saldo do produto nunca pode ficar negativo.
+  - Entradas e ajustes não são permitidos em produtos excluídos.
 
 ## UC18 Consultar movimentações de estoque
 

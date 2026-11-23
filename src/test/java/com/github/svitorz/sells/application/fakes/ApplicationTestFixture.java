@@ -1,13 +1,23 @@
 package com.github.svitorz.sells.application.fakes;
 
 import com.github.svitorz.sells.application.catalog.CategoryService;
+import com.github.svitorz.sells.application.catalog.CreateProductCommand;
 import com.github.svitorz.sells.application.catalog.ProductService;
+import com.github.svitorz.sells.application.catalog.ProductView;
+import com.github.svitorz.sells.application.customer.CustomerCommand;
 import com.github.svitorz.sells.application.customer.CustomerService;
+import com.github.svitorz.sells.application.customer.CustomerView;
+import com.github.svitorz.sells.application.sale.SaleService;
 import com.github.svitorz.sells.application.session.AuthenticatedUser;
 import com.github.svitorz.sells.application.session.SessionContext;
+import com.github.svitorz.sells.application.stock.StockService;
 import com.github.svitorz.sells.application.user.NewUserCommand;
 import com.github.svitorz.sells.application.user.UserService;
+import com.github.svitorz.sells.domain.product.ProductUnit;
 import com.github.svitorz.sells.domain.user.Role;
+
+import java.math.BigDecimal;
+import java.util.Optional;
 
 /** Wires every fake and every service of the application layer, for tests. */
 public final class ApplicationTestFixture {
@@ -28,6 +38,41 @@ public final class ApplicationTestFixture {
     public final ProductService productService = new ProductService(products, categories, movements, session, tx,
             clock);
     public final CustomerService customerService = new CustomerService(customers, session, tx, clock);
+    public final SaleService saleService = new SaleService(sales, products, customers, users, movements, session,
+            tx, clock);
+    public final StockService stockService = new StockService(products, movements, users, session, tx, clock);
+
+    /** Logs in as admin for one call, then restores the session that was active before. */
+    public ProductView createProduct(String name, String barcode, String price, ProductUnit unit,
+                                     String initialStock) {
+        Optional<AuthenticatedUser> previous = session.current();
+        loginAsAdmin();
+        try {
+            return productService.create(new CreateProductCommand(name, barcode, new BigDecimal(price), unit, null,
+                    initialStock == null ? null : new BigDecimal(initialStock), null));
+        } finally {
+            restoreSession(previous);
+        }
+    }
+
+    /** Logs in as admin for one call, then restores the session that was active before. */
+    public CustomerView createCustomer(String name) {
+        Optional<AuthenticatedUser> previous = session.current();
+        loginAsAdmin();
+        try {
+            return customerService.create(new CustomerCommand(name, "11999990000", null, null, null, null));
+        } finally {
+            restoreSession(previous);
+        }
+    }
+
+    private void restoreSession(Optional<AuthenticatedUser> previous) {
+        if (previous.isPresent()) {
+            session.start(previous.get());
+        } else {
+            session.end();
+        }
+    }
 
     /** Creates the admin "admin" if needed, then logs in as it. */
     public AuthenticatedUser loginAsAdmin() {
