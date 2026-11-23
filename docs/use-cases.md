@@ -45,6 +45,7 @@ O cliente não é ator, porque não usa o sistema.
 - **Regras:**
   - Usuários inativos (`active = false`, ADR-0006) não podem autenticar.
   - A senha é armazenada com hash, nunca em texto puro.
+  - A mensagem de erro é a mesma para usuário inexistente, inativo ou senha incorreta.
 
 ## UC02 Configurar o primeiro administrador
 
@@ -62,6 +63,8 @@ O cliente não é ator, porque não usa o sistema.
   - Reativar define `active = true`.
   - E-mail e username são únicos, mesmo entre usuários inativos.
   - O sistema não permite desativar o último administrador ativo.
+  - A senha deve ter pelo menos 6 caracteres.
+  - Um administrador não pode desativar o próprio usuário.
 
 ## UC04 Gerenciar categorias
 
@@ -75,13 +78,14 @@ O cliente não é ator, porque não usa o sistema.
 
 - **Ator:** Administrador.
 - **Fluxo principal:** cadastrar, editar, definir categorias e excluir produtos.
-- **Campos:** nome, código de barras (opcional), preço, unidade (`UN` ou `KG`), descrição, estoque inicial e categorias.
+- **Campos:** nome, código de barras (opcional), preço, unidade (`UN` ou `KG`), descrição (opcional), estoque inicial e categorias.
 - **Regras:**
   - Preço não pode ser negativo.
   - O código de barras é único entre produtos ativos (ADR-0009).
   - A unidade `UN` aceita apenas quantidades inteiras. A unidade `KG` aceita até três casas decimais.
   - A exclusão é lógica (ADR-0006). Produtos excluídos continuam nas vendas e movimentações antigas.
   - Alterar o estoque diretamente não é permitido. Mudanças de estoque passam pelo UC17.
+  - O estoque inicial, quando maior que zero, é registrado como uma movimentação `ENTRY` com a observação `Estoque inicial`.
 
 ## UC06 Buscar produtos
 
