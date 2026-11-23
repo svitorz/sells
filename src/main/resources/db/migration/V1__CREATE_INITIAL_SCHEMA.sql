@@ -24,7 +24,7 @@ create table products(
   barcode varchar(50),
   price NUMERIC(10, 2) not null,
   unit varchar(2) not null,
-  description TEXT not null,
+  description TEXT,
   stock NUMERIC(10, 3) not null,
   version BIGINT not null default 0,
   created_at TIMESTAMP,
@@ -130,3 +130,7 @@ create table stock_movements(
   constraint fk_stock_movements_sale foreign key(sale_id) references sales(id),
   constraint fk_stock_movements_user foreign key(user_id) references users(id)
 );
+
+create index ix_sales_status_date on sales(status, date);
+create index ix_sales_user_status on sales(user_id, status);
+create index ix_stock_movements_product_created on stock_movements(product_id, created_at);

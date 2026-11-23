@@ -50,6 +50,11 @@ class SchemaConstraintsTest {
     }
 
     @Test
+    void allowsProductWithoutDescription() throws Exception {
+        assertAccepted("insert into products (name, price, unit, stock) values ('Pão', 1, 'UN', 1)");
+    }
+
+    @Test
     void rejectsNegativeStock() throws Exception {
         assertRejected("insert into products (name, price, unit, description, stock) values ('Arroz', 10, 'KG', 'Tipo 1', -1)");
     }

@@ -26,6 +26,7 @@ erDiagram
 - Valores monetários são `NUMERIC(10,2)`. Quantidades e estoque são `NUMERIC(10,3)`.
 - Datas e horas são `TIMESTAMP`, e datas sem hora são `DATE`.
 - Exclusão lógica, nas tabelas `products` e `customers`, usa a coluna `deleted_at` (ADR-0006).
+- Registros excluídos logicamente são filtrados explicitamente nas consultas do adaptador de persistência (`deleted_at IS NULL`).
 - Em `products` e `customers`, os campos únicos são únicos apenas entre registros ativos (`WHERE deleted_at IS NULL`), por índice único parcial (ADR-0006).
 - Enums são armazenados como `VARCHAR` com `CHECK` que restringe os valores aceitos.
 
@@ -61,11 +62,11 @@ erDiagram
 | barcode | VARCHAR(50) | sim | Único entre ativos (ADR-0009) |
 | price | NUMERIC(10,2) | não | `>= 0` |
 | unit | VARCHAR(2) | não | `UN` ou `KG` (ADR-0009) |
-| description | TEXT | não | |
+| description | TEXT | sim | |
 | stock | NUMERIC(10,3) | não | Saldo atual, `>= 0` (ADR-0005) |
 | version | BIGINT | não | Controle de concorrência, padrão 0 |
-| created_at | TIMESTAMP | sim | Preenchido pela auditoria |
-| updated_at | TIMESTAMP | sim | Preenchido pela auditoria |
+| created_at | TIMESTAMP | sim | Preenchido pela aplicação |
+| updated_at | TIMESTAMP | sim | Preenchido pela aplicação |
 | deleted_at | TIMESTAMP | sim | Exclusão lógica (ADR-0006) |
 
 ### product_category
@@ -94,8 +95,8 @@ Tabela de associação N:N entre produtos e categorias. A chave primária é com
 | city | VARCHAR(100) | sim | Endereço |
 | state | VARCHAR(2) | sim | Endereço |
 | zip_code | VARCHAR(10) | sim | Endereço |
-| created_at | TIMESTAMP | sim | Preenchido pela auditoria |
-| updated_at | TIMESTAMP | sim | Preenchido pela auditoria |
+| created_at | TIMESTAMP | sim | Preenchido pela aplicação |
+| updated_at | TIMESTAMP | sim | Preenchido pela aplicação |
 | deleted_at | TIMESTAMP | sim | Exclusão lógica (ADR-0006) |
 
 ### sales
@@ -103,13 +104,13 @@ Tabela de associação N:N entre produtos e categorias. A chave primária é com
 | Coluna | Tipo | Nulo | Observações |
 |---|---|---|---|
 | id | BIGINT | não | Identidade gerada |
-| date | TIMESTAMP | não | Data da venda |
+| date | TIMESTAMP | não | Data da venda. No rascunho, é a data de criação; na finalização, passa a ser a data da finalização. |
 | subtotal | NUMERIC(10,2) | não | `>= 0`. Recalculado no rascunho e congelado na finalização (UC09, UC13) |
 | status | VARCHAR(20) | não | `DRAFT`, `CANCELLED` ou `COMPLETED` |
 | customer_id | BIGINT | sim | FK para `customers`. Venda pode não ter cliente |
 | user_id | BIGINT | não | FK para `users`. Responsável pela venda |
-| created_at | TIMESTAMP | sim | Preenchido pela auditoria |
-| updated_at | TIMESTAMP | sim | Preenchido pela auditoria |
+| created_at | TIMESTAMP | sim | Preenchido pela aplicação |
+| updated_at | TIMESTAMP | sim | Preenchido pela aplicação |
 | cancelled_at | TIMESTAMP | sim | Obrigatório quando `CANCELLED` |
 | cancelled_by_user_id | BIGINT | sim | FK para `users`. Obrigatório quando `CANCELLED` |
 | cancel_reason | TEXT | sim | Obrigatório e não vazio quando `CANCELLED` (ADR-0007) |
@@ -137,7 +138,7 @@ Um mesmo produto aparece no máximo uma vez por venda (`UNIQUE (sale_id, product
 | quantity | NUMERIC(10,3) | não | Com sinal: positivo aumenta o estoque, negativo diminui. Nunca zero |
 | sale_id | BIGINT | sim | FK para `sales`. Obrigatório em `SALE` e `RETURN` |
 | user_id | BIGINT | não | FK para `users`. Quem registrou a movimentação |
-| created_at | TIMESTAMP | não | Preenchido pela auditoria |
+| created_at | TIMESTAMP | não | Preenchido pela aplicação |
 | notes | TEXT | sim | Obrigatório em `ADJUSTMENT` |
 
 Regras de sinal por tipo:
@@ -159,6 +160,14 @@ Algumas regras não podem ser expressas apenas com constraints do banco. Elas s�
 - Uma venda `COMPLETED` precisa ter pelo menos um item (DOMAIN).
 - O `subtotal` de um rascunho é igual à soma de `quantity * unit_price` dos itens.
 - Finalizar uma venda cria as movimentações `SALE` e atualiza `products.stock` na mesma transação, com bloqueio do produto (ADR-0005).
+
+## Índices
+
+| Índice | Colunas | Motivo |
+|---|---|---|
+| `ix_sales_status_date` | `sales(status, date)` | Histórico de vendas filtrado por status e período (UC15) |
+| `ix_sales_user_status` | `sales(user_id, status)` | Localizar o rascunho aberto de cada usuário (UC08) |
+| `ix_stock_movements_product_created` | `stock_movements(product_id, created_at)` | Histórico de movimentações de um produto (UC18) |
 
 ## Testes de schema
 

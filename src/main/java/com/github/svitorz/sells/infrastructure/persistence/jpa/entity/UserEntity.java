@@ -1,54 +1,50 @@
 package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
 import com.github.svitorz.sells.domain.user.Role;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@SuperBuilder
-@NoArgsConstructor
+@Table(name = "users")
 @Getter
 @Setter
-@Table(name = "users")
+@NoArgsConstructor
 public class UserEntity {
 
     @Id
-    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id" )
     private Long id;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(name = "email", length = 100, nullable = false)
     private String email;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(name = "username", length = 100, nullable = false)
     private String username;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
-
-    @Column(length = 255, nullable = false)
+    @Column(name = "password", length = 255, nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", length = 50, nullable = false)
+    private Role role;
+
+    @Column(name = "birthday_date")
     private LocalDate birthdayDate;
 
-    @Builder.Default
     @Column(name = "active", nullable = false)
-    private boolean active = true;
-
-    @OneToMany(mappedBy = "user")
-    private List<SaleEntity> sales = new ArrayList<>();
+    private boolean active;
 }

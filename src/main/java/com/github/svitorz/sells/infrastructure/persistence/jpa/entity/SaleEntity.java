@@ -1,65 +1,76 @@
 package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
 import com.github.svitorz.sells.domain.sale.SaleStatus;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@NoArgsConstructor
 @Table(name = "sales")
-@EntityListeners(AuditingEntityListener.class)
-//TODO: implementar o allArgs constructor
-//TODO: implementar Getters e Setters corretamente
+@Getter
+@Setter
+@NoArgsConstructor
 public class SaleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "subtotal", precision = 10, scale = 2, nullable = false)
     private BigDecimal subtotal;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "status", length = 20, nullable = false)
     private SaleStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private CustomerEntity customer;
+    @Column(name = "customer_id")
+    private Long customerId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-    @CreatedDate
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @Column(name = "cancelled_at")
     private LocalDateTime cancelledAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cancelled_by_user_id")
-    private UserEntity cancelledBy;
+    @Column(name = "cancelled_by_user_id")
+    private Long cancelledByUserId;
 
     @Column(name = "cancel_reason", columnDefinition = "TEXT")
     private String cancelReason;
 
     @Version
+    @Column(name = "version")
     private Long version;
 
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id")
+    @BatchSize(size = 100)
+    private List<SaleItemEntity> items = new ArrayList<>();
 }

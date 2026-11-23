@@ -9,7 +9,7 @@ Produtos e clientes aparecem em vendas e movimentações de estoque, então excl
 
 ## Decisão
 
-1. **Produtos e clientes** têm exclusão lógica pela coluna `deleted_at`. Registros excluídos são ocultados das consultas padrão pela anotação `@SQLRestriction`.
+1. **Produtos e clientes** têm exclusão lógica pela coluna `deleted_at`. Registros excluídos são ocultados das consultas padrão por filtros explícitos nas consultas do adaptador de persistência.
 2. **Auditoria:** produtos e clientes têm `created_at`, `updated_at` e `deleted_at`. Usuários não têm campos de auditoria nesta versão.
 3. **Usuários** não são excluídos nem recebem `deleted_at`. São desativados pelo campo `active`. Um usuário inativo não pode autenticar, e a reativação define `active` como verdadeiro.
 4. **Categorias** são excluídas fisicamente. Os vínculos com produtos são removidos em cascata, pela tabela `product_category`.
@@ -27,6 +27,6 @@ Produtos e clientes aparecem em vendas e movimentações de estoque, então excl
 
 ## Consequências
 
-- Consultas em `products` e `customers` respeitam a restrição de registros ativos. A anotação `@SQLRestriction` faz isso automaticamente nas consultas via JPA.
+- Consultas de produtos e clientes ativos filtram `deleted_at IS NULL` explicitamente. Consultas de histórico (itens de venda, movimentações) não filtram, para que produtos excluídos continuem visíveis em registros antigos. O `@SQLRestriction` não é usado porque esconderia esses produtos também no histórico.
 - O índice único parcial não é reconhecido pelo `@Column(unique = true)`. Por isso, a unicidade é garantida no banco pela migration, e não pela anotação.
 - Excluir uma categoria remove silenciosamente seus vínculos com produtos. A interface deve avisar o administrador antes de confirmar a exclusão.

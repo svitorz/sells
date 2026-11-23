@@ -15,7 +15,7 @@ O sistema controla estoque. Precisamos decidir quando a quantidade de um produto
 4. **Baixa:** acontece somente na finalização da venda.
 5. **Estoque negativo:** não é permitido. Isso é garantido pela constraint `CHECK (stock >= 0)` e pela validação na aplicação.
 6. **Adicionar item ao rascunho:** mostra o estoque disponível como aviso, sem bloquear. Um rascunho não reserva estoque.
-7. **Finalizar:** bloqueia se algum item exceder o estoque disponível. A verificação usa lock no produto ou controle de versão (`@Version`), para que duas vendas simultâneas não vendam o mesmo item.
+7. **Finalizar:** bloqueia se algum item exceder o estoque disponível. A verificação usa lock pessimista nas linhas dos produtos (`SELECT ... FOR UPDATE`, em ordem de id para evitar deadlock). O `@Version` protege as demais edições, para que duas vendas simultâneas não vendam o mesmo item.
 8. **Ajuste manual:** exige `notes` preenchido, para que toda correção tenha justificativa.
 
 ## Motivo

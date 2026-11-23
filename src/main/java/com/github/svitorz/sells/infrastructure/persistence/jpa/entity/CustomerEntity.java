@@ -1,53 +1,54 @@
 package com.github.svitorz.sells.infrastructure.persistence.jpa.entity;
 
-import jakarta.persistence.*;
-import lombok.Builder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "customers")
-@SuperBuilder
-@SQLDelete(sql = "UPDATE customers SET deleted_at = NOW() WHERE id = ?")
-@SQLRestriction("deleted_at IS NULL")
-@NoArgsConstructor
 @Getter
-public class CustomerEntity extends AuditableEntity{
+@Setter
+@NoArgsConstructor
+public class CustomerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
+    @Column(name = "name", length = 255, nullable = false)
     private String name;
 
-    @Setter
-    @Column(name = "email")
+    @Column(name = "phone", length = 20, nullable = false)
+    private String phone;
+
+    @Column(name = "email", length = 255)
     private String email;
 
-    @Setter
+    @Column(name = "birthday_date")
     private LocalDate birthdayDate;
 
-    @Setter
     @Column(name = "cpf_cnpj", length = 14)
     private String cpfCnpj;
 
-    @Setter
-    private String phone;
-
-    @Setter
     @Embedded
     private AddressEmbeddable address;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "customer")
-    private List<SaleEntity> sales = new ArrayList<>();
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }
