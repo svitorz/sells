@@ -82,7 +82,11 @@ Exemplos:
 - um preço não pode ser negativo;
 - uma venda deve possuir pelo menos um item para ser finalizada;
 - uma SaleItem deve estar associada a um Product;
-- uma SaleItem deve estar associada a uma Sale.
+- uma SaleItem deve estar associada a uma Sale;
+- o total de um item é `quantity × unit_price`, arredondado para centavos com arredondamento comercial (meio para cima). O subtotal da venda é a soma dos totais dos itens;
+- ao adicionar um produto que já está na venda, a quantidade é somada e o preço unitário original da linha é mantido;
+- produtos `UN` aceitam quantidades inteiras. Produtos `KG` aceitam até 3 casas decimais;
+- o CPF ou CNPJ é armazenado somente com dígitos. O CEP é armazenado somente com dígitos (8). A UF é armazenada em maiúsculas.
 
 ### Regras configuráveis
 

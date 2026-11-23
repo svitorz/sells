@@ -114,7 +114,7 @@ O cliente não é ator, porque não usa o sistema.
   - A quantidade deve ser maior que zero.
   - Produtos `UN` aceitam apenas quantidades inteiras.
   - O preço é copiado do produto no momento da inclusão (`unit_price`).
-  - Se o produto já estiver no rascunho, as quantidades são somadas em uma única linha. Um produto aparece no máximo uma vez por venda (`UNIQUE` em `sale_items`).
+  - Se o produto já estiver no rascunho, as quantidades são somadas em uma única linha, mantendo o preço unitário da primeira inclusão. Um produto aparece no máximo uma vez por venda (`UNIQUE` em `sale_items`).
   - Se a quantidade exceder o estoque disponível, o sistema mostra um aviso, mas permite a inclusão. O bloqueio acontece na finalização (ADR-0005).
 
 ## UC10 Alterar quantidade ou remover item do rascunho
